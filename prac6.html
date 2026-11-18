@@ -1,0 +1,618 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cricket League</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      color: #45484d;
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* Navigation */
+    header {
+      background-color: white;
+      text-align: center;
+      padding: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h1 {
+      color: #176b3a;
+      margin: 0;
+    }
+
+    nav a {
+      color: #45484d;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: #176b3a;
+      text-decoration: underline;
+    }
+
+    /* Dropdown menu */
+    .dropdown {
+      display: inline-block;
+      position: relative;
+    }
+
+    .dropdown button {
+      background: none;
+      color: #45484d;
+      border: none;
+      padding: 0;
+      margin: 0 10px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 150px;
+      background-color: white;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      z-index: 101;
+      text-align: left;
+    }
+
+    .dropdown-content a {
+      display: block;
+      padding: 8px 12px;
+      margin: 0;
+    }
+
+    .dropdown:hover .dropdown-content,
+    .dropdown:focus-within .dropdown-content {
+      display: block;
+    }
+
+    .music {
+      background-color: white;
+      text-align: center;
+      padding: 10px;
+    }
+
+    /* Cricket banner */
+    .hero {
+      position: relative;
+      height: 260px;
+      overflow: hidden;
+      background: #173b2a;
+    }
+
+    .banner {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.78;
+    }
+
+    .hero-content {
+      position: absolute;
+      left: 7%;
+      bottom: 28px;
+      z-index: 2;
+      color: white;
+      max-width: 560px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-content h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.1;
+      margin: 0 0 8px;
+    }
+
+    .live-tag {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      z-index: 3;
+      padding: 7px 12px;
+      background: #176b3a;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    /* Sidebar and main content */
+    .page-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      width: 94%;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+
+    .sidebar {
+      width: 210px;
+      flex-shrink: 0;
+      background-color: white;
+      border-left: 5px solid #176b3a;
+      border-radius: 8px;
+      padding: 15px;
+      box-sizing: border-box;
+      position: sticky;
+      top: 125px;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #176b3a;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #45484d;
+      padding: 7px 0;
+      text-decoration: none;
+    }
+
+    .sidebar a:hover {
+      color: #176b3a;
+    }
+
+    .main-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    /* Media section */
+    .media {
+      width: 100%;
+      max-width: 1000px;
+      margin: 20px auto;
+    }
+
+    .section-heading {
+      margin-bottom: 15px;
+      border-left: 5px solid #176b3a;
+      padding-left: 12px;
+    }
+
+    .box {
+      width: 48%;
+      display: inline-block;
+      vertical-align: top;
+      margin: 0 1% 18px 0;
+      padding: 12px;
+      box-sizing: border-box;
+      background: white;
+      border-radius: 8px;
+      position: relative;
+      box-shadow: 0 3px 10px rgba(25, 25, 25, 0.07);
+    }
+
+    .box h3 {
+      margin: 0 0 10px;
+      color: #45484d;
+    }
+
+    .box iframe,
+    .box video {
+      width: 100%;
+      height: 250px;
+      border: 0;
+      display: block;
+      border-radius: 4px;
+    }
+
+    .media-tag {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      z-index: 2;
+      background: #45484d;
+      color: white;
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 3px;
+    }
+
+    /* Cricket statistics */
+    .feature-strip {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 22px 0;
+    }
+
+    .feature {
+      flex: 1 1 150px;
+      background: white;
+      padding: 15px;
+      border-radius: 7px;
+      border-bottom: 3px solid #176b3a;
+    }
+
+    .feature strong {
+      display: block;
+      font-size: 22px;
+      color: #176b3a;
+    }
+
+    /* Match update cards */
+    .race-card {
+      position: relative;
+      overflow: hidden;
+      background: white;
+      border-radius: 8px;
+      padding: 18px;
+      margin: 18px 0;
+      border-left: 5px solid #176b3a;
+      box-shadow: 0 3px 10px rgba(25, 25, 25, 0.07);
+    }
+
+    .race-card h3 {
+      margin-top: 0;
+      padding-right: 90px;
+    }
+
+    .card-status {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 1;
+      background: #e1f1e6;
+      color: #12552f;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 5px 8px;
+      border-radius: 4px;
+    }
+
+    .race-card p {
+      margin-bottom: 0;
+    }
+
+    /* Match schedule */
+    .schedule {
+      position: relative;
+      margin: 20px 0;
+      padding: 5px 0 5px 28px;
+      border-left: 3px solid #176b3a;
+    }
+
+    .schedule-item {
+      position: relative;
+      background: white;
+      margin: 0 0 14px;
+      padding: 12px 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 7px rgba(25, 25, 25, 0.06);
+    }
+
+    .schedule-item::before {
+      content: "";
+      position: absolute;
+      left: -37px;
+      top: 17px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #176b3a;
+      border: 3px solid #f1f1f1;
+    }
+
+    .schedule-item strong {
+      color: #45484d;
+    }
+
+    /* Application form */
+    .form-section {
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+      margin: 20px auto;
+      background-color: white;
+      padding: 18px;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .form-section input,
+    .form-section select,
+    .form-section textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+      box-sizing: border-box;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #176b3a;
+      color: white;
+      border: 0;
+      padding: 10px 16px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #0f4f2a;
+    }
+
+    .dropdown button {
+      background: none;
+      color: #45484d;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .dropdown button:hover {
+      background: none;
+      color: #176b3a;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #173b2a;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      clear: both;
+    }
+
+    /* Responsive layout */
+    @media (max-width: 800px) {
+      .page-layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .sidebar a {
+        display: inline-block;
+        margin-right: 12px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .box {
+        width: 100%;
+        margin-right: 0;
+      }
+
+      .hero {
+        height: 220px;
+      }
+
+      nav a {
+        display: inline-block;
+        margin: 5px 8px;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .hero-content {
+        left: 5%;
+        right: 5%;
+        bottom: 20px;
+      }
+
+      .live-tag {
+        top: 12px;
+        right: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Cricket League</h1>
+    <p>Passion, teamwork, batting, and bowling.</p>
+
+    <nav>
+      <a href="#media">Media</a>
+
+      <div class="dropdown">
+        <button type="button">Match Updates ▼</button>
+        <div class="dropdown-content">
+          <a href="#race-info">Match Updates</a>
+          <a href="#application">Join Us</a>
+          <a href="#media">Media Elements</a>
+        </div>
+      </div>
+
+      <a href="#application">Join Us</a>
+    </nav>
+  </header>
+
+  <div class="music">
+    <p>Play Music:</p>
+    <audio controls>
+      <source src="audio.mpeg" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+
+  <section class="hero">
+    <img class="banner"
+         
+         alt="Cricket League banner">
+
+    <span class="live-tag">CRICKET SEASON 2026</span>
+
+    <div class="hero-content">
+      <h2>Play with Passion.<br>Win with Teamwork.</h2>
+      <p>Explore the players, skills, and strategies behind cricket.</p>
+    </div>
+  </section>
+
+  <div class="page-layout">
+
+    <aside class="sidebar">
+      <h2>Cricket Hub</h2>
+      <p>Explore the Cricket League page.</p>
+      <a href="#media">Media Elements</a>
+      <a href="#race-info">Match Updates</a>
+      <a href="#application">Join the League</a>
+    </aside>
+
+    <main class="main-content">
+
+      <section class="media" id="media">
+        <h2 class="section-heading">Inside Cricket League</h2>
+
+        <div class="feature-strip">
+          <div class="feature">
+            <strong>150+</strong>
+            <span>Runs in a big innings</span>
+          </div>
+
+          <div class="feature">
+            <strong>20</strong>
+            <span>Overs in a T20 innings</span>
+          </div>
+
+          <div class="feature">
+            <strong>11</strong>
+            <span>Players in each team</span>
+          </div>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">GUIDE</span>
+          <h3>Cricket Basics</h3>
+          <iframe src="Cricket_Basics.pdf"
+                  title="Cricket Basics PDF"></iframe>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">MATCH VIDEO</span>
+          <h3>Cricket Highlights</h3>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/pq7t0PLBfQY?si=Y1VUyzyBfGMnNnsU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>"
+            title="Cricket highlights video"
+            allowfullscreen></iframe>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">PLAYER VIEW</span>
+          <h3>Cricket Match Video</h3>
+          <video controls>
+            <source src="V.mp4"
+                    type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="box">
+          <span class="media-tag">VENUE</span>
+          <h3>Find a Cricket Stadium</h3>
+          <iframe
+            src="https://www.google.com/maps?q=cricket+stadium&output=embed"
+            title="Cricket stadium location"
+            loading="lazy"></iframe>
+        </div>
+      </section>
+
+      <section id="-info">
+        <h2 class="section-heading">Cricket Match Updates</h2>
+
+        <article class="race-card">
+          <span class="card-status">UPCOMING</span>
+          <h3>Championship Match</h3>
+          <p>
+            Follow the latest preparations, team meetings, and practice
+            sessions as the Cricket League gets ready for match day.
+          </p>
+        </article>
+
+        <article class="race-card">
+          <span class="card-status">TEAM NEWS</span>
+          <h3>Teamwork on the Field</h3>
+          <p>
+            Every run matters. The captain, batters, bowlers, and
+            fielders work together to make smart decisions under pressure.
+          </p>
+        </article>
+
+        <h2 class="section-heading">Match Day Schedule</h2>
+
+        <div class="schedule">
+          <div class="schedule-item">
+            <strong>09:00 AM — Team Practice</strong>
+            <p>Players warm up and prepare their batting and bowling plans.</p>
+          </div>
+
+          <div class="schedule-item">
+            <strong>12:30 PM — Toss and Team Selection</strong>
+            <p>Captains prepare their teams and final match strategies.</p>
+          </div>
+
+          <div class="schedule-item">
+            <strong>03:00 PM — Main Match</strong>
+            <p>The teams take the field for the championship match.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section" id="application">
+        <h2>Join the Cricket League</h2>
+
+        <form action="#" method="post">
+          <label for="full-name">Full Name</label>
+          <input id="full-name" name="full-name"
+                 type="text" required>
+
+          <label for="email">Email</label>
+          <input id="email" name="email"
+                 type="email" required>
+
+          <label for="role">Role</label>
+          <select id="role" name="role">
+            <option>Cricket Player</option>
+            <option>Team Coordinator</option>
+            <option>Ground Operations</option>
+            <option>Coach</option>
+            <option>Team Manager</option>
+          </select>
+
+          <label for="reason">
+            Why do you want to join Cricket League?
+          </label>
+          <textarea id="reason" name="reason" rows="4"></textarea>
+
+          <button type="submit">Submit</button>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Cricket League</p>
+  </footer>
+
+</body>
+</html>
